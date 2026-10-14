@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="id">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Our Universe · Admin</title>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Our Universe · Admin</title>
+
+<!-- MEMASUKKAN LIBRARY DATABASE FIREBASE SDK V8 -->
+<script src="https://gstatic.com"></script>
+<script src="https://gstatic.com"></script>
+
 <style>
 :root{color-scheme:dark;--bg:#0c0b16;--panel:#171525;--panel2:#201b31;--ink:#f8f2ff;--muted:#b6a9c8;--accent:#ff78ae;--accent2:#b79aff;--line:#ffffff16;--good:#75e0ba;--warn:#ffd27d;--danger:#ff7890;--shadow:0 22px 70px #0005}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 12% 0%,#512b5b55,transparent 36%),radial-gradient(ellipse at 90% 18%,#41317844,transparent 34%),var(--bg);color:var(--ink);font:15px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.14;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:31px 31px;mask-image:linear-gradient(to bottom,#000,transparent 75%)}
@@ -15,58 +23,64 @@ label{display:block;font-size:.88rem;font-weight:650;color:#e7dcef;margin:16px 0
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 </style></head>
 <body><main class="wrap">
-<section class="panel" id="loginPanel"><h1>💌 Our Universe — Admin</h1><p class="small">Masuk untuk mengelola halaman kenangan kalian.</p><div class="notice">Catatan keamanan: login versi ini masih demo sisi browser. Untuk website publik, aktifkan Firebase Authentication dan batasi akses database dengan Security Rules; jangan simpan data pribadi di database terbuka.</div>
-<form id="loginForm"><label for="email">Gmail Admin</label><input id="email" type="email" autocomplete="username" required><label for="password">Password Kontrol</label><input id="password" type="password" autocomplete="current-password" required><button type="submit">Masuk ke dashboard ♡</button></form></section>
+
+<section class="panel" id="loginPanel">
+    <h1>💌 Our Universe — Admin</h1>
+    <p class="small">Masuk untuk mengelola halaman kenangan kalian.</p>
+    <div class="notice">Catatan keamanan: login versi ini masih demo sisi browser. Untuk website publik, aktifkan Firebase Authentication dan batasi akses database dengan Security Rules.</div>
+    <form id="loginForm">
+        <label for="email">Gmail Admin</label>
+        <input id="email" type="email" autocomplete="username" value="zaquanwle@gmail.com" required>
+        <label for="password">Password Kontrol</label>
+        <input id="password" type="password" autocomplete="current-password" required>
+        <button type="submit">Masuk ke dashboard ♡</button>
+    </form>
+</section>
+
 <div id="dashboard">
-<header class="panel"><div class="dash-head"><div><div class="eyebrow">PRIVATE LOVE SPACE · CONTROL CENTER</div><h1>🌙 Pusat Kontrol LDR</h1><p class="small">Rawat semua cerita kecil kalian, dari satu tempat.</p></div><div class="head-actions"><span class="status-pill" id="connectionPill"><span class="status-dot"></span><span id="dbStatus">Memeriksa koneksi...</span></span><button id="logout" class="secondary" type="button">Keluar ↗</button></div></div></header>
-<div class="stats"><div class="stat"><div class="stat-top"><span>Foto tersimpan</span><span class="stat-icon">🖼️</span></div><strong id="photoCount">0</strong><small>Kenangan di galeri</small></div><div class="stat"><div class="stat-top"><span>Bucket list</span><span class="stat-icon">✨</span></div><strong id="bucketCount">0</strong><small>Mimpi yang direncanakan</small></div><div class="stat"><div class="stat-top"><span>Terakhir disimpan</span><span class="stat-icon">💾</span></div><strong id="lastSaved" style="font-size:1.05rem">Belum ada</strong><small>Status perubahan website</small></div></div>
-<div class="tabs"><button class="active" data-tab="sheet1">💗 Konten & Pengaturan</button><button data-tab="sheet2">🎞️ Kenangan & Game</button><button data-tab="sheet3">⚙️ Kode Lanjutan</button></div>
-<section class="panel sheet active" id="sheet1"><div class="eyebrow">01 · WEBSITE CONTENT</div><h2>🖼️ Tampilan & cerita utama</h2><p class="section-intro">Atur foto, surat cinta, kapsul waktu, lokasi, dan suasana hari ini.</p>
-<div class="photo-block"><h3>Foto 1</h3><label>URL Gambar 1</label><input id="photo1Url" type="url" placeholder="https://..."><label>Caption Foto 1</label><input id="photo1Caption"><img id="photo1Preview" class="photo-preview" alt="Pratinjau foto pertama"></div>
-<div class="photo-block"><h3>Foto 2</h3><label>URL Gambar 2</label><input id="photo2Url" type="url" placeholder="https://..."><label>Caption Foto 2</label><input id="photo2Caption"><img id="photo2Preview" class="photo-preview" alt="Pratinjau foto kedua"></div>
-<label>Pilih foto lokal (opsional)</label><input id="imageFile" type="file" accept="image/*"><label>ImgBB API Key (ambil dari akun ImgBB)</label><input id="imgbbKey" type="password" placeholder="Masukkan API key ImgBB"><button id="uploadImage" type="button">Upload Foto 📤</button><p class="small">ImgBB memerlukan API key. Jangan unggah foto pribadi jika link publik tidak diinginkan.</p>
-<label>Surat Cinta</label><textarea id="letter"></textarea><div class="row"><div><label>Jarak Digital (KM)</label><input id="distance" type="number" min="0"></div><div><label>Tanggal Buka Kapsul Waktu</label><input id="capsuleDate" type="datetime-local"></div></div>
-<label>Pesan Kapsul Waktu</label><textarea id="capsuleMessage"></textarea><label>URL Foto Kapsul (opsional)</label><input id="capsuleImage" type="url">
-<div class="row"><div><label>Nama Kota Admin</label><input id="adminCity"></div><div><label>Cuaca Admin (teks manual)</label><input id="adminWeather" placeholder="Cerah ☀️"></div><div><label>Nama Kota Pasangan</label><input id="partnerCity"></div><div><label>Cuaca Pasangan (teks manual)</label><input id="partnerWeather" placeholder="Berawan ☁️"></div></div>
-<div class="row"><div><label>Nama panggilan Admin</label><input id="adminName"></div><div><label>Status Mood</label><select id="mood"><option>Kangen</option><option>Bahagia</option><option>Semangat</option><option>Lelah</option><option>Sakit</option><option>Tenang</option><option>Bangga</option><option>Butuh peluk</option></select></div><div><label>Emoji Mood</label><select id="moodEmoji"><option>🥺</option><option>🥰</option><option>😊</option><option>😴</option><option>🤒</option><option>✨</option><option>🤗</option><option>❤️</option></select></div></div>
-<label>URL Musik MP3 (opsional)</label><input id="musicUrl" type="url" placeholder="https://...mp3">
-<div class="action-bar"><button class="apply" type="button">💾 Simpan semua perubahan</button><span class="small">Data disimpan ke Firebase Realtime Database.</span></div></section>
-<section class="panel sheet" id="sheet2"><div class="eyebrow">02 · MEMORIES & PLAY</div><h2>🎞️ Kenangan, jurnal & permainan</h2><p class="section-intro">Simpan cerita harian dan rencana yang ingin diwujudkan bersama.</p><label>URL Video MP4</label><input id="videoUrl" type="url" placeholder="https://...mp4"><label>Pilih file video lokal (maksimum sesuai layanan host)</label><input id="videoFile" type="file" accept="video/mp4,video/*"><button id="uploadVideo" type="button">Upload Video 📤</button><p class="small">Upload tmpfiles.org memakai layanan pihak ketiga; kebijakan dan masa penyimpanan dapat berubah. File besar mungkin gagal.</p>
-<label>Jurnal Memori LDR</label><textarea id="journal"></textarea><h3>Bucket List</h3><div id="bucketEditor"></div><div class="bucket-row"><input id="newBucket" placeholder="Contoh: liburan ke pantai bersama"><button id="addBucket" type="button">Tambah</button></div>
-<label>Pertanyaan Love Trivia</label><input id="triviaQuestion"><label>Jawaban Benar</label><input id="triviaAnswer"><div class="action-bar"><button class="apply" type="button">💾 Simpan semua perubahan</button><span class="small">Data disimpan ke Firebase Realtime Database.</span></div></section>
-<section class="panel sheet" id="sheet3"><div class="eyebrow">03 · ADVANCED</div><h2>🧩 Ekstensi tampilan</h2><p class="section-intro">Pengaturan lanjutan untuk pengguna yang memahami CSS dan JavaScript.</p><div class="notice">Custom JavaScript berjalan di halaman publik dengan hak akses pengunjung. Jangan memasukkan kode tidak tepercaya atau kode yang membaca data sensitif. CSS/JS yang disimpan bisa merusak tampilan jika salah.</div><label>Custom CSS</label><textarea id="customCss" class="code-field"></textarea><label>Custom JavaScript</label><textarea id="customJs" class="code-field" placeholder="/* Kode tambahan (opsional) */"></textarea><div class="action-bar"><button class="apply" type="button">💾 Simpan semua perubahan</button><span class="small">Data disimpan ke Firebase Realtime Database.</span></div></section>
-</div></main><div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script>
-(function(){
-'use strict';
-var ADMIN_EMAIL='zaquanwle@gmail.com';
-/* DEMO ONLY: login ini bisa dilihat siapa pun di source HTML. Gunakan Firebase Authentication untuk keamanan nyata. */
-var DEMO_PASSWORD='221787Chio12?';
-var firebaseConfig={apiKey:"GANTI_DENGAN_FIREBASE_WEB_API_KEY",authDomain:"GANTI_DENGAN_PROJECT_ID.firebaseapp.com",databaseURL:"https://YOUR-PROJECT-default-rtdb.REGION.firebasedatabase.app",projectId:"YOUR-PROJECT",storageBucket:"YOUR-PROJECT.appspot.com",messagingSenderId:"",appId:""};
-var db=null,configRef=null,data=null,bucketList=[];
-function $(id){return document.getElementById(id)}
-function val(id){return $(id).value}
-function setVal(id,v){$(id).value=v==null?'':v}
-function toast(message,type){var el=$('toast');el.textContent=message;el.className='toast show '+(type||'');clearTimeout(toast.timer);toast.timer=setTimeout(function(){el.className='toast'},3600)}
-function setDbStatus(message,state){$('dbStatus').textContent=message;$('connectionPill').className='status-pill '+(state||'')}
-function refreshStats(){var photos=[val('photo1Url').trim(),val('photo2Url').trim()].filter(Boolean);$('photoCount').textContent=photos.length;$('bucketCount').textContent=bucketList.filter(function(x){return String(x.text||'').trim()}).length}
-function updatePhotoPreview(inputId,previewId){var url=val(inputId).trim(),img=$(previewId);if(url){img.src=url;img.style.display='block'}else{img.removeAttribute('src');img.style.display='none'}}
-function isConfigured(){return firebaseConfig.apiKey&&firebaseConfig.apiKey.indexOf('GANTI_')!==0&&firebaseConfig.projectId!=='YOUR-PROJECT'&&firebaseConfig.databaseURL.indexOf('YOUR-PROJECT')===-1}
-function connect(){if(!isConfigured()){setDbStatus('Firebase belum diatur','error');return false}try{if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);db=firebase.database();configRef=db.ref('ldr/config');configRef.once('value').then(function(s){data=s.val()||{};populate(data);setDbStatus('Firebase terhubung','connected');$('lastSaved').textContent=data.updatedAt?new Date(data.updatedAt).toLocaleString('id-ID',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'Belum ada'}).catch(function(e){setDbStatus('Gagal membaca Firebase','error');toast('Gagal membaca Firebase: '+e.message,'bad')});return true}catch(e){setDbStatus('Firebase error','error');toast('Firebase error: '+e.message,'bad');return false}}
-$('loginForm').addEventListener('submit',function(e){e.preventDefault();if(val('email').trim().toLowerCase()!==ADMIN_EMAIL||val('password')!==DEMO_PASSWORD){toast('Email atau password tidak sesuai.','bad');return}sessionStorage.setItem('ldrDemoAdmin','yes');showDashboard()});
-function showDashboard(){if(sessionStorage.getItem('ldrDemoAdmin')!=='yes')return;$('loginPanel').classList.add('hidden');$('dashboard').style.display='block';connect()}
-$('logout').addEventListener('click',function(){sessionStorage.removeItem('ldrDemoAdmin');$('dashboard').style.display='none';$('loginPanel').classList.remove('hidden');$('password').value=''});
-document.querySelectorAll('.tabs button').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.tabs button').forEach(function(x){x.classList.toggle('active',x===b)});document.querySelectorAll('.sheet').forEach(function(x){x.classList.toggle('active',x.id===b.dataset.tab)})})});
-function populate(d){setVal('photo1Url',d.photos&&d.photos[0]?d.photos[0].url:'');setVal('photo1Caption',d.photos&&d.photos[0]?d.photos[0].caption:'');setVal('photo2Url',d.photos&&d.photos[1]?d.photos[1].url:'');setVal('photo2Caption',d.photos&&d.photos[1]?d.photos[1].caption:'');['letter','distance','capsuleDate','capsuleMessage','capsuleImage','adminCity','adminWeather','partnerCity','partnerWeather','adminName','mood','moodEmoji','musicUrl','videoUrl','journal','triviaQuestion','triviaAnswer','customCss','customJs'].forEach(function(k){var v=d[k];if(k==='capsuleDate'&&v){var dt=new Date(v);v=new Date(dt.getTime()-dt.getTimezoneOffset()*60000).toISOString().slice(0,16)}setVal(k,v)});bucketList=Array.isArray(d.bucketList)?d.bucketList.map(function(x){return typeof x==='string'?{text:x,done:false}:Object.assign({},x)}):[];renderBucketEditor();updatePhotoPreview('photo1Url','photo1Preview');updatePhotoPreview('photo2Url','photo2Preview');refreshStats()}
-function renderBucketEditor(){$('bucketEditor').innerHTML='';bucketList.forEach(function(item,i){var row=document.createElement('div');row.className='bucket-row';var input=document.createElement('input');input.value=item.text||'';input.setAttribute('aria-label','Bucket list '+(i+1));input.addEventListener('input',function(){bucketList[i].text=input.value});var del=document.createElement('button');del.type='button';del.className='danger';del.textContent='Hapus';del.addEventListener('click',function(){bucketList.splice(i,1);renderBucketEditor()});row.appendChild(input);row.appendChild(del);$('bucketEditor').appendChild(row)});refreshStats()}
-['photo1Url','photo2Url'].forEach(function(id,i){$(id).addEventListener('input',function(){updatePhotoPreview(id,i===0?'photo1Preview':'photo2Preview');refreshStats()})});
-$('addBucket').addEventListener('click',function(){var t=val('newBucket').trim();if(!t)return;bucketList.push({text:t,done:false});setVal('newBucket','');renderBucketEditor()});
-function collect(){return {photos:[{url:val('photo1Url').trim(),caption:val('photo1Caption')},{url:val('photo2Url').trim(),caption:val('photo2Caption')}].filter(function(p){return p.url}),letter:val('letter'),distance:Math.max(0,Number(val('distance'))||0),capsuleDate:val('capsuleDate')?new Date(val('capsuleDate')).toISOString():'',capsuleMessage:val('capsuleMessage'),capsuleImage:val('capsuleImage').trim(),adminCity:val('adminCity').trim()||'Kota Admin',adminWeather:val('adminWeather'),partnerCity:val('partnerCity').trim()||'Kota Pasangan',partnerWeather:val('partnerWeather'),adminName:val('adminName').trim()||'Zaquan',mood:val('mood'),moodEmoji:val('moodEmoji'),musicUrl:val('musicUrl').trim(),videoUrl:val('videoUrl').trim(),journal:val('journal'),bucketList:bucketList.map(function(x){return {text:String(x.text||'').trim(),done:!!x.done}}).filter(function(x){return x.text}),triviaQuestion:val('triviaQuestion'),triviaAnswer:val('triviaAnswer').trim(),customCss:val('customCss'),customJs:val('customJs'),updatedAt:Date.now()}}
-function applyChanges(){if(!db||!configRef){toast('Firebase belum terhubung. Periksa konfigurasi dan koneksi.','bad');return}var payload=collect();var buttons=document.querySelectorAll('.apply');buttons.forEach(function(b){b.disabled=true;b.dataset.oldText=b.textContent;b.textContent='Menyimpan…'});configRef.set(payload).then(function(){return db.ref('ldr/bucketList').set(payload.bucketList)}).then(function(){setDbStatus('Perubahan tersimpan','connected');$('lastSaved').textContent=new Date(payload.updatedAt).toLocaleString('id-ID',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});refreshStats();toast('Semua perubahan berhasil disimpan ke Firebase. ❤️','ok')}).catch(function(e){setDbStatus('Gagal menyimpan','error');toast('Gagal menyimpan: '+e.message,'bad')}).finally(function(){buttons.forEach(function(b){b.disabled=false;b.textContent=b.dataset.oldText||'💾 Simpan semua perubahan'})})}
-document.querySelectorAll('.apply').forEach(function(b){b.addEventListener('click',applyChanges)});
-$('uploadImage').addEventListener('click',function(){var file=$('imageFile').files[0],key=val('imgbbKey').trim();if(!file){alert('Pilih file gambar terlebih dahulu.');return}if(!key){alert('Masukkan ImgBB API Key terlebih dahulu.');return}var fd=new FormData();fd.append('image',file);$('uploadImage').disabled=true;$('uploadImage').textContent='Mengunggah...';fetch('https://api.imgbb.com/1/upload?key='+encodeURIComponent(key),{method:'POST',body:fd}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(j){if(!j.success||!j.data||!j.data.url)throw new Error('ImgBB menolak unggahan');var target=!val('photo1Url').trim()?'photo1Url':(!val('photo2Url').trim()?'photo2Url':'photo1Url');setVal(target,j.data.url);alert('Upload berhasil! URL diisi ke '+target+'. Klik Terapkan Semua Perubahan untuk menyimpan.')}).catch(function(e){alert('Upload gagal: '+e.message)}).finally(function(){$('uploadImage').disabled=false;$('uploadImage').textContent='Upload Foto 📤'})});
-$('uploadVideo').addEventListener('click',function(){var file=$('videoFile').files[0];if(!file){alert('Pilih file video terlebih dahulu.');return}var fd=new FormData();fd.append('file',file);$('uploadVideo').disabled=true;$('uploadVideo').textContent='Mengunggah...';fetch('https://tmpfiles.org/api/v1/upload',{method:'POST',body:fd}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(j){var link=j&&j.data&&j.data.url;if(!link)throw new Error('URL upload tidak ditemukan');link=link.replace('tmpfiles.org/','tmpfiles.org/dl/');setVal('videoUrl',link);alert('Upload selesai. URL video sudah diisi; klik Terapkan Semua Perubahan untuk menyimpan.')}).catch(function(e){alert('Upload video gagal: '+e.message+'. Coba host video lain yang menyediakan URL MP4 langsung.')}).finally(function(){$('uploadVideo').disabled=false;$('uploadVideo').textContent='Upload Video 📤'})});
-if(sessionStorage.getItem('ldrDemoAdmin')==='yes')showDashboard();
-})();
-</script></body></html>
+    <header class="panel">
+        <div class="dash-head">
+            <div>
+                <div class="eyebrow">PRIVATE LOVE SPACE · CONTROL CENTER</div>
+                <h1>🌙 Pusat Kontrol LDR</h1>
+                <p class="small">Rawat semua cerita kecil kalian, dari satu tempat.</p>
+            </div>
+            <div class="head-actions">
+                <span class="status-pill connected" id="connectionPill"><span class="status-dot"></span><span id="dbStatus">Koneksi Cloud Aktif</span></span>
+                <button id="logout" class="secondary" type="button">Keluar ↗</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-top"><span>Link Foto</span><div class="stat-icon">🖼️</div></div>
+            <strong id="statPhotos">0/2</strong>
+            <small>Tersemat aktif</small>
+        </div>
+        <div class="stat">
+            <div class="stat-top"><span>Suasana Hati</span><div class="stat-icon">❤️</div></div>
+            <strong id="statMood">-</strong>
+            <small>Status terupdate</small>
+        </div>
+        <div class="stat">
+            <div class="stat-top"><span>Custom Jurnal</span><div class="stat-icon">📓</div></div>
+            <strong id="statLetters">Sinkron</strong>
+            <small>Database Aktif</small>
+        </div>
+    </div>
+
+    <!-- TABS NAVIGATION -->
+    <div class="tabs">
+        <button class="active" onclick="switchTab('sheet1', this)">📋 Sheet 1: Utama & Foto</button>
+        <button onclick="switchTab('sheet2', this)">🎥 Sheet 2: Video, Jurnal & Kuis</button>
+        <button onclick="switchTab('sheet3', this)">💻 Sheet 3: Custom Code (CSS/JS)</button>
+    </div>
+
+    <!-- SHEET 1 -->
+    <div id="sheet1" class="sheet active panel">
+        <h2>Konfigurasi Foto & Fitur Jarak LDR</h2>
+        
+        <div class="photo-block">
+            <h3>🖼️ Upload Foto Instan dari Laptop</h3>
+            <input type="file" id="uploadFoto" accept="image/*">
