@@ -1,0 +1,431 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Little Universe ♡</title>
+
+  <style>
+    :root {
+      --bg: #fff3f5;
+      --card: rgba(255, 255, 255, 0.82);
+      --text: #704656;
+      --muted: #a17d8b;
+      --pink: #e88da8;
+      --border: #f4d6df;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      transition: background 0.7s, color 0.7s;
+    }
+
+    body.night {
+      --bg: #171725;
+      --card: rgba(39, 37, 58, 0.9);
+      --text: #ffeaf2;
+      --muted: #c9a9ba;
+      --pink: #f18bb0;
+      --border: #494056;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1050px, 92%);
+      margin: auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0;
+      gap: 12px;
+    }
+
+    .logo {
+      font-size: 17px;
+      letter-spacing: 2px;
+    }
+
+    .date {
+      color: var(--muted);
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+    }
+
+    .hero {
+      min-height: 75vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 45px 0;
+    }
+
+    .hero-content {
+      max-width: 700px;
+    }
+
+    .eyebrow {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    h1 {
+      font-size: clamp(44px, 9vw, 86px);
+      line-height: 1.08;
+      font-weight: normal;
+      margin: 24px 0;
+    }
+
+    h1 span {
+      color: var(--pink);
+      font-style: italic;
+    }
+
+    .description {
+      max-width: 490px;
+      margin: 0 auto;
+      color: var(--muted);
+      line-height: 1.9;
+      font-size: 15px;
+    }
+
+    .hero-heart {
+      display: block;
+      font-size: 76px;
+      margin: 24px auto;
+      animation: heartbeat 1.5s infinite;
+      filter: drop-shadow(0 8px 15px #e88da855);
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.12); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.08); }
+    }
+
+    .primary-button {
+      display: inline-block;
+      padding: 15px 28px;
+      border-radius: 40px;
+      background: var(--pink);
+      color: white;
+      margin-top: 27px;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      box-shadow: 0 8px 22px #e88da833;
+      transition: transform 0.25s;
+    }
+
+    .primary-button:hover {
+      transform: translateY(-4px);
+    }
+
+    .menu-title {
+      text-align: center;
+      font-size: 29px;
+      font-weight: normal;
+      margin: 15px 0 25px;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 15px;
+      margin-bottom: 65px;
+    }
+
+    .menu-card {
+      text-align: center;
+      padding: 25px 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      transition: transform 0.25s, border-color 0.25s;
+      backdrop-filter: blur(10px);
+    }
+
+    .menu-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--pink);
+    }
+
+    .menu-icon {
+      font-size: 33px;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .menu-card h3 {
+      font-size: 16px;
+      font-weight: normal;
+      margin-bottom: 7px;
+    }
+
+    .menu-card p {
+      font: 12px/1.6 Arial, sans-serif;
+      color: var(--muted);
+    }
+
+    .quote {
+      text-align: center;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 32px 20px;
+      margin-bottom: 35px;
+      line-height: 1.9;
+    }
+
+    .quote p {
+      font-size: 20px;
+      font-style: italic;
+    }
+
+    .quote small {
+      display: block;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px 0 35px;
+      color: var(--muted);
+      font: 12px Arial, sans-serif;
+    }
+
+    .floating-heart {
+      position: fixed;
+      bottom: -30px;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.55;
+      animation: floatUp linear forwards;
+    }
+
+    @keyframes floatUp {
+      to {
+        transform: translateY(-115vh) rotate(35deg);
+        opacity: 0;
+      }
+    }
+
+    .admin-link {
+      position: fixed;
+      left: 9px;
+      bottom: 7px;
+      z-index: 5;
+      font: 10px Arial, sans-serif;
+      opacity: 0.22;
+    }
+
+    .admin-link:hover {
+      opacity: 0.85;
+    }
+
+    @media (max-width: 700px) {
+      .menu-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hero {
+        min-height: 65vh;
+      }
+
+      header {
+        align-items: flex-start;
+      }
+
+      .logo {
+        font-size: 13px;
+      }
+
+      .date {
+        text-align: right;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <header>
+      <div class="logo">♡ OUR LITTLE UNIVERSE</div>
+      <div class="date" id="liveDate">A little world for two</div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-content">
+          <div class="eyebrow">Two hearts · One universe</div>
+
+          <h1>
+            Welcome to<br>
+            <span>our little world.</span>
+          </h1>
+
+          <p class="description">
+            Walaupun kita dipisahkan oleh jarak, kita tetap
+            memiliki satu tempat untuk menyimpan cerita,
+            mimpi, dan semua hal kecil tentang kita. ❤️
+          </p>
+
+          <span class="hero-heart">💗</span>
+
+          <a href="index.html" class="primary-button">
+            Mulai Perjalanan Kita ♡ →
+          </a>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="menu-title">Explore Our Memories</h2>
+
+        <div class="menu-grid">
+
+          <a href="index.html#gallery" class="menu-card">
+            <span class="menu-icon">📸</span>
+            <h3>Galeri Kita</h3>
+            <p>Potongan cerita yang indah.</p>
+          </a>
+
+          <a href="index.html#journalText" class="menu-card">
+            <span class="menu-icon">📖</span>
+            <h3>Jurnal LDR</h3>
+            <p>Cerita dari hati ke hati.</p>
+          </a>
+
+          <a href="index.html#bucketList" class="menu-card">
+            <span class="menu-icon">🌷</span>
+            <h3>Our Dreams</h3>
+            <p>Mimpi yang ingin diwujudkan.</p>
+          </a>
+
+          <a href="index.html#spinBtn" class="menu-card">
+            <span class="menu-icon">🎡</span>
+            <h3>Date Night</h3>
+            <p>Pilih kencan seru bersama.</p>
+          </a>
+
+          <a href="index.html#triviaQuestion" class="menu-card">
+            <span class="menu-icon">💞</span>
+            <h3>Love Trivia</h3>
+            <p>Seberapa kenal kita?</p>
+          </a>
+
+          <a href="index.html#capsuleStatus" class="menu-card">
+            <span class="menu-icon">🕰️</span>
+            <h3>Time Capsule</h3>
+            <p>Pesan untuk masa depan.</p>
+          </a>
+
+          <a href="index.html#envelope" class="menu-card">
+            <span class="menu-icon">💌</span>
+            <h3>Surat Cinta</h3>
+            <p>Ada pesan khusus untukmu.</p>
+          </a>
+
+          <a href="index.html#missBtn" class="menu-card">
+            <span class="menu-icon">❤️</span>
+            <h3>Kangen Kamu</h3>
+            <p>Kirim rasa kangenmu.</p>
+          </a>
+
+        </div>
+      </section>
+
+      <section class="quote">
+        <p>
+          "Distance means so little when someone
+          means so much."
+        </p>
+        <small>♡ A little reminder for us</small>
+      </section>
+    </main>
+
+    <footer>
+      Made with love, for our own little universe. ♡
+      <br><br>
+      One day, the distance will be just a memory.
+    </footer>
+  </div>
+
+  <a href="admin.html" class="admin-link">⚙️ Admin System</a>
+
+  <script>
+    (function () {
+      "use strict";
+
+      function updateTimeAndTheme() {
+        var now = new Date();
+
+        document.getElementById("liveDate").textContent =
+          now.toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+          });
+
+        document.body.classList.toggle(
+          "night",
+          now.getHours() >= 19 || now.getHours() < 6
+        );
+      }
+
+      function createFloatingHeart() {
+        var heart = document.createElement("span");
+
+        heart.className = "floating-heart";
+        heart.textContent = ["♡", "♥", "💗", "✧"][
+          Math.floor(Math.random() * 4)
+        ];
+
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = 12 + Math.random() * 22 + "px";
+        heart.style.animationDuration = 8 + Math.random() * 8 + "s";
+
+        document.body.appendChild(heart);
+
+        setTimeout(function () {
+          heart.remove();
+        }, 17000);
+      }
+
+      updateTimeAndTheme();
+      setInterval(updateTimeAndTheme, 30000);
+
+      for (var i = 0; i < 12; i++) {
+        setTimeout(createFloatingHeart, i * 400);
+      }
+
+      setInterval(createFloatingHeart, 800);
+    })();
+  </script>
+</body>
+</html>
+```
