@@ -1,27 +1,80 @@
-
-```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Special Moments ❤️</title>
-    
-    <script src="https://gstatic.com"></script>
-    <script src="https://gstatic.com"></script>
 
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #fdfbf7 0%, #f5ece5 100%); margin: 0; padding: 40px 20px 80px 20px; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; position: relative; }
-        .heart-bg { position: fixed; top: -10vh; font-size: 20px; color: rgba(242, 165, 177, 0.4); animation: fall linear infinite; z-index: -1; user-select: none; }
-        @keyframes fall { to { transform: translateY(110vh) translateX(50px) rotate(360deg); } }
+        /* --- GAYA DASAR & BACKGROUND --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fdfbf7 0%, #f5ece5 100%);
+            margin: 0;
+            padding: 40px 20px 80px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- AKSESORI: HUJAN HATI --- */
+        .heart-bg {
+            position: fixed;
+            top: -10vh;
+            font-size: 20px;
+            color: rgba(242, 165, 177, 0.4);
+            animation: fall linear infinite;
+            z-index: -1;
+            user-select: none;
+        }
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) translateX(50px) rotate(360deg);
+            }
+        }
+
+        /* --- JUDUL UTAMA --- */
         .header { text-align: center; margin-bottom: 40px; }
         .header h1 { color: #4a3e3d; font-size: 2.5rem; margin-bottom: 10px; }
         .header p { color: #8c7a78; margin: 0; font-style: italic; }
-        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 950px; width: 100%; margin-bottom: 40px; }
-        .photo-item { position: relative; background-color: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 24px rgba(140, 122, 120, 0.15); aspect-ratio: 1 / 1; transition: all 0.4s ease; }
+
+        /* --- GALERI FOTO KOTAK-KOTAK (GRID) --- */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 950px;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .photo-item {
+            position: relative;
+            background-color: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(140, 122, 120, 0.15);
+            aspect-ratio: 1 / 1; 
+            transition: all 0.4s ease;
+        }
         .photo-item:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(242, 165, 177, 0.4); }
-        .photo-item img { width: 100%; height: 100%; object-fit: cover; }
-        .photo-caption { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(74, 62, 61, 0.85)); color: white; padding: 20px 15px 15px 15px; font-size: 0.95rem; text-align: center; opacity: 0; transition: opacity 0.3s; }
+        .photo-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        
+        .photo-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(74, 62, 61, 0.85));
+            color: white;
+            padding: 20px 15px 15px 15px;
+            font-size: 0.95rem;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
         .photo-item:hover .photo-caption { opacity: 1; }
         
         /* KOMPONEN VIDEO & JURNAL MEMORI */
@@ -33,6 +86,7 @@
         .love-letter-container { max-width: 600px; width: 100%; text-align: center; margin-top: 20px; }
         .envelope { background: #ffffff; border: 2px dashed #f2a5b1; border-radius: 12px; padding: 20px; cursor: pointer; display: inline-block; width: 80%; }
         .letter-content { display: none; background: #fffdf9; border-radius: 12px; padding: 30px; margin-top: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); color: #4a3e3d; text-align: left; }
+        
         .music-box { position: fixed; bottom: 20px; right: 20px; background: #fff; padding: 10px 15px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 10px; z-index: 100; cursor: pointer; border: 1px solid #f2a5b1; }
         @media (max-width: 768px) { .photo-grid { grid-template-columns: repeat(2, 1fr); } }
     </style>
@@ -54,7 +108,7 @@
         <div class="photo-item"><img src="https://picsum.photos"><div class="photo-caption">Ruang Sayang Pasangan ✨</div></div>
     </div>
 
-    <!-- 2. PEMUTAR VIDEO SEKAT LUAR -->
+    <!-- 2. PEMUTAR VIDEO -->
     <div class="section-title">🎥 Cuplikan Video Kenangan Kita</div>
     <div class="video-container">
         <video id="vidMoments" controls poster="https://picsum.photos">
@@ -63,7 +117,7 @@
         </video>
     </div>
 
-    <!-- 3. SHEET MEMORI / JURNAL LDR -->
+    <!-- 3. SHEET MEMORI / JURNAL -->
     <div class="section-title">📓 Lembar Cerita & Memori Jurnal</div>
     <div class="memory-board" id="boardMemori">
         Belum ada cerita memori yang dibagikan oleh admin melalui panel kontrol...
@@ -77,36 +131,50 @@
 
     <a href="admin.html" style="position: fixed; bottom: 20px; left: 20px; text-decoration: none; font-size: 11px; color: rgba(74, 62, 61, 0.25); z-index: 999;">⚙️ Admin System</a>
 
+    <!-- SCRIPT FIREBASE DINAMIS PALING AMAN -->
     <script>
-        const configUtama = { databaseURL: "https://firebasedatabase.app" };
-        firebase.initializeApp(configUtama);
-        
-        firebase.database().ref('konten_web').on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                if(data.foto1) document.getElementById("img1").src = data.foto1;
-                if(data.caption1) document.getElementById("cap1").innerHTML = data.caption1;
-                if(data.foto2) document.getElementById("img2").src = data.foto2;
-                if(data.caption2) document.getElementById("cap2").innerHTML = data.caption2;
-                if(data.surat) document.getElementById("textSurat").innerHTML = data.surat;
-                
-                // Sinkronisasi Video & Memori Baru
-                if(data.video) {
-                    const videoEl = document.getElementById("vidMoments");
-                    if(videoEl.src !== data.video) {
-                        videoEl.src = data.video;
-                        videoEl.load();
-                    }
-                }
-                if(data.memori) document.getElementById("boardMemori").innerHTML = data.memori;
+        window.addEventListener('load', () => {
+            const fbApp = document.createElement('script');
+            fbApp.src = "https://gstatic.com";
+            document.body.appendChild(fbApp);
 
-                if(data.css) {
-                    let dynamicStyle = document.getElementById("dynamic-style");
-                    if(!dynamicStyle) { dynamicStyle = document.createElement("style"); dynamicStyle.id = "dynamic-style"; document.head.appendChild(dynamicStyle); }
-                    dynamicStyle.innerHTML = data.css;
-                }
-                if(data.js) { try { eval(data.js); } catch(e) { console.error(e); } }
-            }
+            fbApp.onload = () => {
+                const fbDb = document.createElement('script');
+                fbDb.src = "https://gstatic.com";
+                document.body.appendChild(fbDb);
+
+                fbDb.onload = () => {
+                    const configUtama = { databaseURL: "https://firebasedatabase.app" };
+                    if (!firebase.apps.length) { firebase.initializeApp(configUtama); }
+                    
+                    firebase.database().ref('konten_web').on('value', (snapshot) => {
+                        const data = snapshot.val();
+                        if (data) {
+                            if(data.foto1) document.getElementById("img1").src = data.foto1;
+                            if(data.caption1) document.getElementById("cap1").innerHTML = data.caption1;
+                            if(data.foto2) document.getElementById("img2").src = data.foto2;
+                            if(data.caption2) document.getElementById("cap2").innerHTML = data.caption2;
+                            if(data.surat) document.getElementById("textSurat").innerHTML = data.surat;
+                            
+                            if(data.video) {
+                                const videoEl = document.getElementById("vidMoments");
+                                if(videoEl.src !== data.video) {
+                                    videoEl.src = data.video;
+                                    videoEl.load();
+                                }
+                            }
+                            if(data.memori) document.getElementById("boardMemori").innerHTML = data.memori;
+
+                            if(data.css) {
+                                let dynamicStyle = document.getElementById("dynamic-style");
+                                if(!dynamicStyle) { dynamicStyle = document.createElement("style"); dynamicStyle.id = "dynamic-style"; document.head.appendChild(dynamicStyle); }
+                                dynamicStyle.innerHTML = data.css;
+                            }
+                            if(data.js) { try { eval(data.js); } catch(e) { console.error(e); } }
+                        }
+                    });
+                };
+            };
         });
 
         function openLetter() {
@@ -127,10 +195,7 @@
         function createHeart() {
             const heart = document.createElement('div'); heart.classList.add('heart-bg'); heart.innerHTML = '❤️';
             heart.style.left = Math.random() * 100 + 'vw'; heart.style.animationDuration = Math.random() * 3 + 3 + 's';
-            heart.style.fontSize = Math.random() * 15 + 15 + 'px'; document.body.appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 6000);
-        }
-        setInterval(createHeart, 400);
-    </script>
-</body>
-</html>
+heart.style.fontSize = Math.random() * 15 + 15 + 'px'; document.body.appendChild(heart);
+setTimeout(() => { heart.remove(); }, 6000);
+}
+setInterval(createHeart, 400);
