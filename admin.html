@@ -101,7 +101,7 @@
             
             <br><br>
             <label>📓 Teks Sheet Memori (Cerita Kenangan & Jurnal LDR kalian)</label>
-            <textarea id="teksMemori" rows="8" placeholder="Tuliskan memori panjang kalian di sini, misalnya: 'Hari ini tepat 1 tahun kita LDR antar kota...'"></textarea>
+            <textarea id="teksMemori" rows="8" placeholder="Tuliskan memori panjang kalian di sini, misalnya: 'Hari ini tepat 1 tahun kita LDR...'"></textarea>
             
             <br><br>
             <button onclick="saveChanges()">🚀 Terapkan Semua Perubahan</button>
@@ -120,6 +120,7 @@
     </div>
 
     <script>
+        // DATA LOGIN SUDAH DIKUNCI MENGGUNAKAN TANDA PETIK DUA YANG BENAR
         const ADMIN_GMAIL = "zaquanwle@gmail.com"; 
         const ADMIN_PASSWORD = "221787Chio12?"; 
 
@@ -130,21 +131,25 @@
         const database = firebase.database();
 
         function checkAdminCredentials() {
-            const email = document.getElementById('emailInput').value.trim();
-            const password = document.getElementById('passInput').value;
-            if (email === ADMIN_GMAIL && password === ADMIN_PASSWORD) {
-                document.getElementById('loginBox').style.display = 'none';
-                document.getElementById('adminDashboard').style.display = 'block';
-                loadExistingData();
-                setupUploaders();
-            } else {
-                alert('Akses Ditolak! Gmail atau Password Admin dinyatakan Your email or password is incorrect!.');
+            try {
+                const email = document.getElementById('emailInput').value.trim();
+                const password = document.getElementById('passInput').value;
+
+                if (email === ADMIN_GMAIL && password === ADMIN_PASSWORD) {
+                    document.getElementById('loginBox').style.display = 'none';
+                    document.getElementById('adminDashboard').style.display = 'block';
+                    loadExistingData();
+                    setupUploaders();
+                } else {
+                    alert('Akses Ditolak! Gmail atau Password Admin dinyatakan salah (Your email or password is incorrect!).');
+                }
+            } catch(err) {
+                alert('Sistem Error: ' + err.message);
             }
         }
 
-        // AUTO UPLOAD MENGGUNAKAN SERVER BERSIH IMGBB GRATISAN TANPA AKUN
         function setupUploaders() {
-            // Uploader Foto
+            // Uploader Foto Otomatis
             document.getElementById('fileUploaderFoto').addEventListener('change', function(e) {
                 const file = e.target.files[0];
                 if(!file) return;
@@ -152,7 +157,7 @@
                 const formData = new FormData();
                 formData.append('image', file);
                 
-                fetch('https://imgbb.com', { // Key publik alternatif gratis
+                fetch('https://imgbb.com', {
                     method: 'POST',
                     body: formData
                 }).then(res => res.json()).then(data => {
@@ -168,11 +173,11 @@
                 }).catch(() => { document.getElementById('uploadStatusFoto').innerText = "❌ Gagal mengunggah."; });
             });
 
-            // Uploader Video (Menggunakan server anonim tmpfiles)
-            document.getElementById('fileUploaderVideo').addEventListener('change', function(e) {
-                const file = e.target.files[0];
+            // Uploader Video Otomatis
+document.getElementById('fileUploaderVideo').addEventListener('change', function(e) {
+const file = e.target.files[0];
 if(!file) return;
-document.getElementById('uploadStatusVideo').innerText = "🔄 Sedang mengunggah video ke internet (butuh waktu)...";
+document.getElementById('uploadStatusVideo').innerText = "🔄 Sedang mengunggah video ke internet (mohon tunggu)...";
 const formData = new FormData();
 formData.append('file', file);
 fetch('tmpfiles.org', {
@@ -180,7 +185,6 @@ method: 'POST',
 body: formData
 }).then(res => res.json()).then(data => {
 if(data.data && data.data.url) {
-// Ubah link tmpfiles biasa menjadi link direct download mp4 video tag
 const directUrl = data.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
 document.getElementById('uploadStatusVideo').innerHTML = ✅ Berhasil! Salin link ini: <br><b style="color:#ff7b90; word-break:break-all;">${directUrl}</b>;
 document.getElementById('linkVideo').value = directUrl;
