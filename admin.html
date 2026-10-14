@@ -28,7 +28,7 @@
 </head>
 <body>
 
-    <!-- 1. PINTU MASUK KEAMANAN (MANDIRI & ANTI-BEKU) -->
+    <!-- 1. PINTU MASUK KEAMANAN -->
     <div class="login-box" id="loginBox">
         <h2>🔒 Secure Admin Access</h2>
         <p style="color: #ccc; font-size: 0.9rem; margin-bottom: 25px;">Verifikasi kredensial website LDR</p>
@@ -116,7 +116,7 @@
         </div>
     </div>
 
-    <!-- SISTEM KONTROL JAVASCRIPT -->
+    <!-- LOGIK SKRIP UTAMA -->
     <script>
         const ADMIN_GMAIL = "zaquanwle@gmail.com"; 
         const ADMIN_PASSWORD = "221787Chio12?"; 
@@ -128,7 +128,7 @@
             if (email === ADMIN_GMAIL && password === ADMIN_PASSWORD) {
                 document.getElementById('loginBox').style.display = 'none';
                 document.getElementById('adminDashboard').style.display = 'block';
-                initFirebaseConnection();
+                initFirebaseAndUploaders();
             } else {
                 alert('Akses Ditolak! Gmail atau Password Admin dinyatakan salah.');
             }
@@ -142,7 +142,7 @@
         }
 
         let database;
-        function initFirebaseConnection() {
+        function initFirebaseAndUploaders() {
             const fbApp = document.createElement('script');
             fbApp.src = "https://gstatic.com";
             document.head.appendChild(fbApp);
@@ -161,7 +161,6 @@
             };
         }
 
-        // FUNGSI UPLOAD FOTO MANUAL
         function uploadFotoSekarang() {
             const fileInput = document.getElementById('fileUploaderFoto');
             if(fileInput.files.length === 0) { alert('Pilih file fotonya dulu dari laptop!'); return; }
@@ -174,63 +173,3 @@
             .then(res => res.json()).then(data => {
                 if(data.success) {
                     const directUrl = data.data.url;
-document.getElementById('uploadStatusFoto').innerHTML = ✅ Berhasil! Link otomatis disalin ke kolom input.;
-if(!document.getElementById('linkFoto1').value) document.getElementById('linkFoto1').value = directUrl;
-else document.getElementById('linkFoto2').value = directUrl;
-} else { document.getElementById('uploadStatusFoto').innerText = "❌ Gagal mengunggah foto."; }
-}).catch(() => { document.getElementById('uploadStatusFoto').innerText = "❌ Terjadi kesalahan jaringan."; });
-}
-// FUNGSI UPLOAD VIDEO MANUAL
-function uploadVideoSekarang() {
-const fileInput = document.getElementById('fileUploaderVideo');
-if(fileInput.files.length === 0) { alert('Pilih file videonya dulu dari laptop!'); return; }
-document.getElementById('uploadStatusVideo').innerText = "🔄 Sedang mengunggah video ke internet (mohon tunggu)...";
-const formData = new FormData();
-formData.append('file', fileInput.files[0]);
-fetch('tmpfiles.org', { method: 'POST', body: formData })
-.then(res => res.json()).then(data => {
-if(data.data && data.data.url) {
-const directUrl = data.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
-document.getElementById('uploadStatusVideo').innerHTML = ✅ Berhasil! Link otomatis dimasukkan ke kolom video.;
-document.getElementById('linkVideo').value = directUrl;
-} else { document.getElementById('uploadStatusVideo').innerText = "❌ Gagal mengunggah video."; }
-}).catch(() => { document.getElementById('uploadStatusVideo').innerText = "❌ Terjadi kesalahan jaringan video."; });
-}
-function loadExistingData() {
-if(!database) return;
-database.ref('konten_web').once('value', (snapshot) => {
-const data = snapshot.val();
-if(data) {
-if(data.foto1) document.getElementById('linkFoto1').value = data.foto1;
-if(data.caption1) document.getElementById('capFoto1').value = data.caption1;
-if(data.foto2) document.getElementById('linkFoto2').value = data.foto2;
-if(data.caption2) document.getElementById('capFoto2').value = data.caption2;
-if(data.surat) document.getElementById('isiSurat').value = data.surat;
-if(data.video) document.getElementById('linkVideo').value = data.video;
-if(data.memori) document.getElementById('teksMemori').value = data.memori;
-if(data.css) document.getElementById('customCss').value = data.css;
-if(data.js) document.getElementById('customJs').value = data.js;
-}
-});
-}
-function saveChanges() {
-if(!database) { alert('Sistem database belum siap. Mohon tunggu sesaat.'); return; }
-database.ref('konten_web').set({
-foto1: document.getElementById('linkFoto1').value,
-caption1: document.getElementById('capFoto1').value,
-foto2: document.getElementById('linkFoto2').value,
-caption2: document.getElementById('capFoto2').value,
-surat: document.getElementById('isiSurat').value,
-video: document.getElementById('linkVideo').value,
-memori: document.getElementById('teksMemori').value,
-css: document.getElementById('customCss').value,
-js: document.getElementById('customJs').value
-}).then(() => { alert('✨ Sukses! Semua data berhasil disimpan online.'); })
-.catch((error) => { alert('❌ Gagal: ' + error.message); });
-}
-function logoutAdmin() {
-document.getElementById('emailInput').value = '';
-document.getElementById('passInput').value = '';
-document.getElementById('adminDashboard').style.display = 'none';
-document.getElementById('loginBox').style.display = 'block';
-}
