@@ -5,7 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Secure Center</title>
     
-    <!-- LIBRARY FIREBASE UTUH -->
+    <!-- SISTEM UTAMA LOGIN (DIPASANG DI ATAS AGAR DIJAMIN MERESPON) -->
+    <script>
+        // KREDENSIAL LOGIN ANDA
+        const ADMIN_GMAIL = "zaquanwle@gmail.com"; 
+        const ADMIN_PASSWORD = "221787Chio12?"; 
+
+        function checkAdminCredentials() {
+            const email = document.getElementById('emailInput').value.trim();
+            const password = document.getElementById('passInput').value;
+
+            if (email === ADMIN_GMAIL && password === ADMIN_PASSWORD) {
+                document.getElementById('loginBox').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                loadExistingData();
+                setupUploaders();
+            } else {
+                alert('Akses Ditolak! Gmail atau Password Admin dinyatakan Your email or password is incorrect!.');
+            }
+        }
+    </script>
+
+    <!-- LIBRARY DATABASE FIREBASE -->
     <script src="https://gstatic.com"></script>
     <script src="https://gstatic.com"></script>
 
@@ -19,7 +40,7 @@
         input:focus, textarea:focus { border-color: #ff7b90; outline: none; }
         button { width: 100%; padding: 12px; background: #ff7b90; border: none; color: white; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 1rem; transition: background 0.2s; margin-top: 5px; }
         button:hover { background: #e06377; }
-        .admin-container { display: none; max-width: 900px; margin: 0 auto; animation: fadeIn 0.5s ease; }
+        .admin-container { display: none; max-width: 900px; margin: 0 auto; }
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; flex-wrap: wrap; }
         .tab-btn { background: #333; color: #ccc; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .tab-btn.active { background: #ff7b90; color: white; }
@@ -27,7 +48,6 @@
         .sheet.active { display: block; }
         .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .upload-zone { background: #13131a; border: 2px dashed #ff7b90; padding: 15px; text-align: center; border-radius: 8px; margin: 10px 0; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         @media (max-width: 600px) { .grid-inputs { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -119,37 +139,15 @@
         </div>
     </div>
 
+    <!-- LOGIKA DATABASE DAN UPLOADER (DITARUH DI BAWAH AGAR TIDAK MENGGANGGU TOMBOL) -->
     <script>
-        // DATA LOGIN SUDAH DIKUNCI MENGGUNAKAN TANDA PETIK DUA YANG BENAR
-        const ADMIN_GMAIL = "zaquanwle@gmail.com"; 
-        const ADMIN_PASSWORD = "221787Chio12?"; 
-
         const firebaseConfig = {
             databaseURL: "https://firebasedatabase.app"
         };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        function checkAdminCredentials() {
-            try {
-                const email = document.getElementById('emailInput').value.trim();
-                const password = document.getElementById('passInput').value;
-
-                if (email === ADMIN_GMAIL && password === ADMIN_PASSWORD) {
-                    document.getElementById('loginBox').style.display = 'none';
-                    document.getElementById('adminDashboard').style.display = 'block';
-                    loadExistingData();
-                    setupUploaders();
-                } else {
-                    alert('Akses Ditolak! Gmail atau Password Admin dinyatakan salah (Your email or password is incorrect!).');
-                }
-            } catch(err) {
-                alert('Sistem Error: ' + err.message);
-            }
-        }
-
         function setupUploaders() {
-            // Uploader Foto Otomatis
             document.getElementById('fileUploaderFoto').addEventListener('change', function(e) {
                 const file = e.target.files[0];
                 if(!file) return;
@@ -173,10 +171,10 @@
                 }).catch(() => { document.getElementById('uploadStatusFoto').innerText = "❌ Gagal mengunggah."; });
             });
 
-            // Uploader Video Otomatis
-document.getElementById('fileUploaderVideo').addEventListener('change', function(e) {
-const file = e.target.files[0];
-if(!file) return;
+            document.getElementById('fileUploaderVideo').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if(!file) return;
+Gunakan kode dengan hati-hati.
 document.getElementById('uploadStatusVideo').innerText = "🔄 Sedang mengunggah video ke internet (mohon tunggu)...";
 const formData = new FormData();
 formData.append('file', file);
@@ -234,3 +232,17 @@ document.getElementById('passInput').value = '';
 document.getElementById('adminDashboard').style.display = 'none';
 document.getElementById('loginBox').style.display = 'block';
 }
+
+
+
+4. Simpan perubahan dengan mengklik tombol **`Commit changes...`**.
+
+---
+
+### ⏳ Langkah Penting Setelah Klik Commit:
+* Wajib **tunggu 2 sampai 3 menit** penuh agar GitHub selesai menyebarkan kode baru ini ke internet.
+* Buka halaman admin di laptop Anda, lalu tekan tombol **`Ctrl` + `Shift` + `R`** secara bersamaan untuk membersihkan memori *cache* browser Anda agar kode rusak versi kemarin dibuang sepenuhnya.
+
+<FollowUp>
+Silakan **timpa isi file admin.html dengan kode super aman** di atas. Jika sudah ditunggu 3 menit dan di-refresh paksa, coba tes masukkan email sembarang lalu klik tombolnya. Apakah kotak peringatan penolakan aksesnya sekarang sudah muncul dengan sukses?
+</FollowUp>
