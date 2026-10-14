@@ -4,31 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Secure Center</title>
-    
-    <!-- SISTEM UTAMA LOGIN (DIPASANG DI ATAS AGAR DIJAMIN MERESPON) -->
-    <script>
-        // KREDENSIAL LOGIN ANDA
-        const ADMIN_GMAIL = "zaquanwle@gmail.com"; 
-        const ADMIN_PASSWORD = "221787Chio12?"; 
-
-        function checkAdminCredentials() {
-            const email = document.getElementById('emailInput').value.trim();
-            const password = document.getElementById('passInput').value;
-
-            if (email === ADMIN_GMAIL && password === ADMIN_PASSWORD) {
-                document.getElementById('loginBox').style.display = 'none';
-                document.getElementById('adminDashboard').style.display = 'block';
-                loadExistingData();
-                setupUploaders();
-            } else {
-                alert('Akses Ditolak! Gmail atau Password Admin dinyatakan Your email or password is incorrect!.');
-            }
-        }
-    </script>
-
-    <!-- LIBRARY DATABASE FIREBASE -->
-    <script src="https://gstatic.com"></script>
-    <script src="https://gstatic.com"></script>
 
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #1e1e24; color: #fff; margin: 0; padding: 20px; }
@@ -57,7 +32,7 @@
     <div class="login-box" id="loginBox">
         <h2>🔒 Secure Admin Access</h2>
         <p style="color: #ccc; font-size: 0.9rem; margin-bottom: 25px;">Verifikasi kredensial website LDR</p>
-        <div class="input-group"><label>Gmail Admin</label><input type="email" id="emailInput" placeholder="contoh@gmail.com" required></div>
+        <div class="input-group"><label>Gmail Admin</label><input type="text" id="emailInput" placeholder="contoh@gmail.com" required></div>
         <div class="input-group"><label>Password Kontrol</label><input type="password" id="passInput" placeholder="••••••••" required></div>
         <button onclick="checkAdminCredentials()">Masuk ke Dashboard</button>
     </div>
@@ -121,7 +96,7 @@
             
             <br><br>
             <label>📓 Teks Sheet Memori (Cerita Kenangan & Jurnal LDR kalian)</label>
-            <textarea id="teksMemori" rows="8" placeholder="Tuliskan memori panjang kalian di sini, misalnya: 'Hari ini tepat 1 tahun kita LDR...'"></textarea>
+            <textarea id="teksMemori" rows="8" placeholder="Tuliskan memori panjang kalian di sini..."></textarea>
             
             <br><br>
             <button onclick="saveChanges()">🚀 Terapkan Semua Perubahan</button>
@@ -139,15 +114,54 @@
         </div>
     </div>
 
-    <!-- LOGIKA DATABASE DAN UPLOADER (DITARUH DI BAWAH AGAR TIDAK MENGGANGGU TOMBOL) -->
+    <!-- LOGIK SKRIP MANDIRI (DITARUH PALING BAWAH AGAR TIDAK BLOCKED BROWSER) -->
     <script>
-        const firebaseConfig = {
-            databaseURL: "https://firebasedatabase.app"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const ADMIN_GMAIL = "zaquanwle@gmail.com"; 
+        const ADMIN_PASSWORD = "221787Chio12?"; 
 
-        function setupUploaders() {
+        function checkAdminCredentials() {
+            const email = document.getElementById('emailInput').value.trim();
+            const password = document.getElementById('passInput').value;
+
+            if (email === ADMIN_GMAIL && password === ADMIN_PASSWORD) {
+                document.getElementById('loginBox').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                
+                // Baru memuat skrip Firebase setelah login sukses agar tidak menghambat tombol
+                initFirebaseAndUploaders();
+            } else {
+                alert('Akses Ditolak! Gmail atau Password Admin dinyatakan salah.');
+            }
+        }
+
+        function switchSheet(sheetId, btnElement) {
+            document.querySelectorAll('.sheet').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(sheetId).classList.add('active');
+            btnElement.classList.add('active');
+        }
+
+        let database;
+        function initFirebaseAndUploaders() {
+            // Memasukkan script library secara dinamis
+            const fbApp = document.createElement('script');
+            fbApp.src = "https://gstatic.com";
+            document.head.appendChild(fbApp);
+
+            fbApp.onload = () => {
+                const fbDb = document.createElement('script');
+                fbDb.src = "https://gstatic.com";
+                document.head.appendChild(fbDb);
+                
+                fbDb.onload = () => {
+                    const firebaseConfig = { databaseURL: "https://firebasedatabase.app" };
+                    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+                    database = firebase.database();
+                    loadExistingData();
+                };
+            };
+
+            // Setup Uploader Media
             document.getElementById('fileUploaderFoto').addEventListener('change', function(e) {
                 const file = e.target.files[0];
                 if(!file) return;
@@ -155,33 +169,25 @@
                 const formData = new FormData();
                 formData.append('image', file);
                 
-                fetch('https://imgbb.com', {
-                    method: 'POST',
-                    body: formData
-                }).then(res => res.json()).then(data => {
+                fetch('https://imgbb.com', { method: 'POST', body: formData })
+                .then(res => res.json()).then(data => {
                     if(data.success) {
                         const directUrl = data.data.url;
                         document.getElementById('uploadStatusFoto').innerHTML = `✅ Berhasil! Salin link ini: <br><b style="color:#ff7b90; word-break:break-all;">${directUrl}</b>`;
-                        if(!document.getElementById('linkFoto1').value) {
-                            document.getElementById('linkFoto1').value = directUrl;
-                        } else {
-                            document.getElementById('linkFoto2').value = directUrl;
-                        }
-                    }
-                }).catch(() => { document.getElementById('uploadStatusFoto').innerText = "❌ Gagal mengunggah."; });
-            });
-
-            document.getElementById('fileUploaderVideo').addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if(!file) return;
 Gunakan kode dengan hati-hati.
+if(!document.getElementById('linkFoto1').value) document.getElementById('linkFoto1').value = directUrl;
+else document.getElementById('linkFoto2').value = directUrl;
+}
+}).catch(() => { document.getElementById('uploadStatusFoto').innerText = "❌ Gagal mengunggah."; });
+});
+document.getElementById('fileUploaderVideo').addEventListener('change', function(e) {
+const file = e.target.files[0];
+if(!file) return;
 document.getElementById('uploadStatusVideo').innerText = "🔄 Sedang mengunggah video ke internet (mohon tunggu)...";
 const formData = new FormData();
 formData.append('file', file);
-fetch('tmpfiles.org', {
-method: 'POST',
-body: formData
-}).then(res => res.json()).then(data => {
+fetch('tmpfiles.org', { method: 'POST', body: formData })
+.then(res => res.json()).then(data => {
 if(data.data && data.data.url) {
 const directUrl = data.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
 document.getElementById('uploadStatusVideo').innerHTML = ✅ Berhasil! Salin link ini: <br><b style="color:#ff7b90; word-break:break-all;">${directUrl}</b>;
@@ -191,6 +197,7 @@ document.getElementById('linkVideo').value = directUrl;
 });
 }
 function loadExistingData() {
+if(!database) return;
 database.ref('konten_web').once('value', (snapshot) => {
 const data = snapshot.val();
 if(data) {
@@ -206,13 +213,8 @@ if(data.js) document.getElementById('customJs').value = data.js;
 }
 });
 }
-function switchSheet(sheetId, btnElement) {
-document.querySelectorAll('.sheet').forEach(s => s.classList.remove('active'));
-document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-document.getElementById(sheetId).classList.add('active');
-btnElement.classList.add('active');
-}
 function saveChanges() {
+if(!database) { alert('Sistem database belum siap. Mohon tunggu sesaat.'); return; }
 database.ref('konten_web').set({
 foto1: document.getElementById('linkFoto1').value,
 caption1: document.getElementById('capFoto1').value,
@@ -232,4 +234,3 @@ document.getElementById('passInput').value = '';
 document.getElementById('adminDashboard').style.display = 'none';
 document.getElementById('loginBox').style.display = 'block';
 }
-        
