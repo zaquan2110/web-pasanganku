@@ -170,3 +170,63 @@
 
             // Uploader Video (Menggunakan server anonim tmpfiles)
             document.getElementById('fileUploaderVideo').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+if(!file) return;
+document.getElementById('uploadStatusVideo').innerText = "🔄 Sedang mengunggah video ke internet (butuh waktu)...";
+const formData = new FormData();
+formData.append('file', file);
+fetch('tmpfiles.org', {
+method: 'POST',
+body: formData
+}).then(res => res.json()).then(data => {
+if(data.data && data.data.url) {
+// Ubah link tmpfiles biasa menjadi link direct download mp4 video tag
+const directUrl = data.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
+document.getElementById('uploadStatusVideo').innerHTML = ✅ Berhasil! Salin link ini: <br><b style="color:#ff7b90; word-break:break-all;">${directUrl}</b>;
+document.getElementById('linkVideo').value = directUrl;
+}
+}).catch(() => { document.getElementById('uploadStatusVideo').innerText = "❌ Gagal mengunggah video."; });
+});
+}
+function loadExistingData() {
+database.ref('konten_web').once('value', (snapshot) => {
+const data = snapshot.val();
+if(data) {
+if(data.foto1) document.getElementById('linkFoto1').value = data.foto1;
+if(data.caption1) document.getElementById('capFoto1').value = data.caption1;
+if(data.foto2) document.getElementById('linkFoto2').value = data.foto2;
+if(data.caption2) document.getElementById('capFoto2').value = data.caption2;
+if(data.surat) document.getElementById('isiSurat').value = data.surat;
+if(data.video) document.getElementById('linkVideo').value = data.video;
+if(data.memori) document.getElementById('teksMemori').value = data.memori;
+if(data.css) document.getElementById('customCss').value = data.css;
+if(data.js) document.getElementById('customJs').value = data.js;
+}
+});
+}
+function switchSheet(sheetId, btnElement) {
+document.querySelectorAll('.sheet').forEach(s => s.classList.remove('active'));
+document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+document.getElementById(sheetId).classList.add('active');
+btnElement.classList.add('active');
+}
+function saveChanges() {
+database.ref('konten_web').set({
+foto1: document.getElementById('linkFoto1').value,
+caption1: document.getElementById('capFoto1').value,
+foto2: document.getElementById('linkFoto2').value,
+caption2: document.getElementById('capFoto2').value,
+surat: document.getElementById('isiSurat').value,
+video: document.getElementById('linkVideo').value,
+memori: document.getElementById('teksMemori').value,
+css: document.getElementById('customCss').value,
+js: document.getElementById('customJs').value
+}).then(() => { alert('✨ Sukses! Semua data, video, dan memori disimpan online.'); })
+.catch((error) => { alert('❌ Gagal: ' + error.message); });
+}
+function logoutAdmin() {
+document.getElementById('emailInput').value = '';
+document.getElementById('passInput').value = '';
+document.getElementById('adminDashboard').style.display = 'none';
+document.getElementById('loginBox').style.display = 'block';
+}
