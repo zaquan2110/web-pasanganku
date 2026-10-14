@@ -174,7 +174,6 @@
             .then(res => res.json()).then(data => {
                 if(data.success) {
                     const directUrl = data.data.url;
-Gunakan kode dengan hati-hati.
 document.getElementById('uploadStatusFoto').innerHTML = ✅ Berhasil! Link otomatis disalin ke kolom input.;
 if(!document.getElementById('linkFoto1').value) document.getElementById('linkFoto1').value = directUrl;
 else document.getElementById('linkFoto2').value = directUrl;
