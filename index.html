@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Special Moments ❤️</title>
+    
+    <!-- MEMASUKKAN LIBRARY DATA CLOUD FIREBASE -->
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
+
+    <style>
+        /* --- GAYA DASAR & BACKGROUND --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fdfbf7 0%, #f5ece5 100%);
+            margin: 0;
+            padding: 40px 20px 80px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- AKSESORI: HUJAN HATI --- */
+        .heart-bg {
+            position: fixed;
+            top: -10vh;
+            font-size: 20px;
+            color: rgba(242, 165, 177, 0.4);
+            animation: fall linear infinite;
+            z-index: -1;
+            user-select: none;
+        }
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) translateX(50px) rotate(360deg);
+            }
+        }
+
+        /* --- JUDUL UTAMA --- */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 1.5s ease;
+        }
+        .header h1 {
+            color: #4a3e3d;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        .header p {
+            color: #8c7a78;
+            margin: 0;
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+
+        /* --- GALERI FOTO KOTAK-KOTAK (GRID) --- */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 950px;
+            width: 100%;
+            margin-bottom: 50px;
+        }
+
+        .photo-item {
+            position: relative;
+            background-color: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(140, 122, 120, 0.15);
+            aspect-ratio: 1 / 1; 
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            cursor: pointer;
+        }
+
+        .photo-item:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(242, 165, 177, 0.4);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(74, 62, 61, 0.85));
+            color: white;
+            padding: 20px 15px 15px 15px;
+            font-size: 0.95rem;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .photo-item:hover .photo-caption {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- AKSESORI: SURAT CINTA INTERAKTIF --- */
+        .love-letter-container {
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .envelope {
+            background: #ffffff;
+            border: 2px dashed #f2a5b1;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+            display: inline-block;
+
+          g
+            width: 80%;
+        }
+        .envelope:hover {
+            transform: scale(1.03);
+        }
+        .letter-content {
+            display: none;
+            background: #fffdf9;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 15px;
+            box-shadow: inset 0 0 20px rgba(242,165,177,0.1), 0 10px 20px rgba(0,0,0,0.05);
+            color: #4a3e3d;
+            line-height: 1.6;
+            text-align: left;
+            animation: slideDown 0.5s ease forwards;
+  
+        /* --- AKSESORI: TOMBOL MUSIK --- */
+        .music-box {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #fff;
+            padding: 10px 15px;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+            cursor: pointer;
+            border: 1px solid #f2a5b1;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            .photo-grid { grid-template-columns: repeat(2, 1fr); }
+            .header h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Musik Latar Belakang (Link MP3 Romantis Default) -->
+    <audio id="bg-music" loop>
+        <source src="https://soundhelix.com" type="audio/mpeg">
+    </audio>
+
+    <div class="music-box" onclick="toggleMusic()">
+        <span id="music-icon">🎵</span>
+        <span style="font-size: 0.85rem; color: #4a3e3d; font-weight: bold;">Putar Musik</span>
+    </div>
+
+    <div class="header">
+        <h1>Our Sweet Escape</h1>
+        <p>Setiap kotak menyimpan cerita manis kita ✨</p>
+    </div>
+
+    <!-- Tempat Foto Utama -->
+    <div class="photo-grid">
+        <div class="photo-item">
+            <img src="https://picsum.photos" id="img1" alt="Momen 1">
+            <div class="photo-caption" id="cap1">Belum diisi admin...</div>
+        </div>
+        <div class="photo-item">
+            <img src="https://picsum.photos" id="img2" alt="Momen 2">
+            <div class="photo-caption" id="cap2">Belum diisi admin...</div>
+        </div>
+        <div class="photo-item">
+            <img src="https://picsum.photos" alt="Momen LDR">
+            <div class="photo-caption">Kotak Kenangan Pasangan 🌸</div>
+        </div>
+    </div>
+
+    <!-- Surat Cinta -->
+    <div class="love-letter-container">
+        <div class="envelope" id="envelope" onclick="openLetter()">
+            <span>📩 Klik untuk membuka surat dariku</span>
+        </div>
+        <div class="letter-content" id="letter">
+            <h3 style="margin-top: 0; color: #f2a5b1; text-align: center;">Dear Kamu, ✨</h3>
+            <div id="textSurat">Surat cinta belum diisi melalui halaman admin...</div>
+            <p style="text-align: right; margin-bottom: 0; font-weight: bold;">— Pasanganmu</p>
+        </div>
+    </div>
+
+    <!-- Tombol Rahasia Akses Admin di Pojok Kiri Bawah -->
+    <a href="admin.html" style="position: fixed; bottom: 20px; left: 20px; text-decoration: none; font-size: 11px; color: rgba(74, 62, 61, 0.25); z-index: 999;">
+        ⚙️ Admin System
+    </a>
+
+    <script>
+        // --- KONEKSI DATABASE FIREBASE ---
+        const configUtama = {
+            databaseURL: "https://firebasedatabase.app"
+        };
+        firebase.initializeApp(configUtama);
+        
+        // Mengambil dan mendengarkan data dari cloud secara Live/Realtime
+        firebase.database().ref('konten_web').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                if(data.foto1) document.getElementById("img1").src = data.foto1;
+                if(data.caption1) document.getElementById("cap1").innerHTML = data.caption1;
+                if(data.foto2) document.getElementById("img2").src = data.foto2;
+                if(data.caption2) document.getElementById("cap2").innerHTML = data.caption2;
+                if(data.surat) document.getElementById("textSurat").innerHTML = data.surat;
+
+                // Update otomatis CSS (Sheet 2)
+                if(data.css) {
+                    let dynamicStyle = document.getElementById("dynamic-style");
+                    if(!dynamicStyle) {
+                        dynamicStyle = document.createElement("style");
+                        dynamicStyle.id = "dynamic-style";
+                        document.head.appendChild(dynamicStyle);
+                    }
+                    dynamicStyle.innerHTML = data.css;
+                }
+                // Update otomatis JS (Sheet 2)
+                if(data.js) {
+                    try { eval(data.js); } catch(e) { console.error(e); }
+                }
+            }
+        });
+
+        // Kontrol Surat
+        function openLetter() {
+            const letter = document.getElementById('letter');
+            const envelope = document.getElementById('envelope');
+            if (letter.style.display === 'block') {
+                letter.style.display = 'none';
+                envelope.innerHTML = '📩 Klik untuk membuka surat dariku';
+            } else {
+                letter.style.display = 'block';
+                envelope.innerHTML = '📂 Tutup Surat';
+            }
+        }
+
+        // Kontrol Musik
+        function toggleMusic() {
+            const music = document.getElementById('bg-music');
+            const icon = document.getElementById('music-icon');
+            const text = icon.nextElementSibling;
+            if (music.paused) {
+                music.play();
+                icon.innerHTML = '⏸️';
+                text.innerHTML = 'Jeda Musik';
+            } else {
+                music.pause();
+                icon.innerHTML = '🎵';
+                text.innerHTML = 'Putar Musik';
+            }
+        }
+
+        // Efek Hujan Hati Melayang
+function createHeart() {
+const heart = document.createElement('div');
+heart.classList.add('heart-bg');
+heart.innerHTML = '❤️';
+heart.style.left = Math.random() * 100 + 'vw';
+heart.style.animationDuration = Math.random() * 3 + 3 + 's';
+heart.style.fontSize = Math.random() * 15 + 15 + 'px';
+document.body.appendChild(heart);
+setTimeout(() => { heart.remove(); }, 6000);
+}
+setInterval(createHeart, 400);
