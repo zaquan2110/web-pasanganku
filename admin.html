@@ -28,7 +28,7 @@
 </head>
 <body>
 
-    <!-- 1. PINTU MASUK KEAMANAN -->
+    <!-- 1. PINTU MASUK KEAMANAN (MANDIRI & ANTI-BEKU) -->
     <div class="login-box" id="loginBox">
         <h2>🔒 Secure Admin Access</h2>
         <p style="color: #ccc; font-size: 0.9rem; margin-bottom: 25px;">Verifikasi kredensial website LDR</p>
@@ -55,9 +55,10 @@
             <h3>Edit Konten Foto Kotak-Kotak</h3>
             
             <div class="upload-zone">
-                <p style="margin: 0 0 10px 0; color: #ff7b90;">⚡ Fitur Upload Foto Instan Gratis</p>
+                <p style="margin: 0 0 10px 0; color: #ff7b90;">⚡ Upload Foto Instan ke Internet</p>
                 <input type="file" id="fileUploaderFoto" accept="image/*">
-                <p id="uploadStatusFoto" style="font-size: 0.85rem; color: #aaa; margin: 5px 0 0 0;">Pilih file foto dari laptop, lalu salin link hasil upload di bawah ke kolom input.</p>
+                <button type="button" onclick="uploadFotoSekarang()" style="width:auto; padding: 6px 15px; font-size:0.85rem; background:#444;">Mulai Upload Foto 📤</button>
+                <p id="uploadStatusFoto" style="font-size: 0.85rem; color: #aaa; margin: 8px 0 0 0;">Pilih file dari laptop, lalu klik tombol mulai upload.</p>
             </div>
 
             <div class="grid-inputs">
@@ -86,9 +87,10 @@
             <h3>Edit Video Pasangan & Sheet Memori</h3>
             
             <div class="upload-zone">
-                <p style="margin: 0 0 10px 0; color: #ff7b90;">⚡ Fitur Upload Video Instan Gratis</p>
+                <p style="margin: 0 0 10px 0; color: #ff7b90;">⚡ Upload Video Instan ke Internet</p>
                 <input type="file" id="fileUploaderVideo" accept="video/*">
-                <p id="uploadStatusVideo" style="font-size: 0.85rem; color: #aaa; margin: 5px 0 0 0;">Maksimal 10-15MB untuk performa terbaik.</p>
+                <button type="button" onclick="uploadVideoSekarang()" style="width:auto; padding: 6px 15px; font-size:0.85rem; background:#444;">Mulai Upload Video 📤</button>
+                <p id="uploadStatusVideo" style="font-size: 0.85rem; color: #aaa; margin: 8px 0 0 0;">Maksimal 10-15MB untuk performa terbaik.</p>
             </div>
 
             <label>Link Video Kenangan LDR (URL)</label>
@@ -114,7 +116,7 @@
         </div>
     </div>
 
-    <!-- LOGIK SKRIP MANDIRI (DITARUH PALING BAWAH AGAR TIDAK BLOCKED BROWSER) -->
+    <!-- SISTEM KONTROL JAVASCRIPT -->
     <script>
         const ADMIN_GMAIL = "zaquanwle@gmail.com"; 
         const ADMIN_PASSWORD = "221787Chio12?"; 
@@ -126,9 +128,7 @@
             if (email === ADMIN_GMAIL && password === ADMIN_PASSWORD) {
                 document.getElementById('loginBox').style.display = 'none';
                 document.getElementById('adminDashboard').style.display = 'block';
-                
-                // Baru memuat skrip Firebase setelah login sukses agar tidak menghambat tombol
-                initFirebaseAndUploaders();
+                initFirebaseConnection();
             } else {
                 alert('Akses Ditolak! Gmail atau Password Admin dinyatakan salah.');
             }
@@ -142,8 +142,7 @@
         }
 
         let database;
-        function initFirebaseAndUploaders() {
-            // Memasukkan script library secara dinamis
+        function initFirebaseConnection() {
             const fbApp = document.createElement('script');
             fbApp.src = "https://gstatic.com";
             document.head.appendChild(fbApp);
@@ -160,41 +159,43 @@
                     loadExistingData();
                 };
             };
+        }
 
-            // Setup Uploader Media
-            document.getElementById('fileUploaderFoto').addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if(!file) return;
-                document.getElementById('uploadStatusFoto').innerText = "🔄 Sedang mengunggah foto ke internet...";
-                const formData = new FormData();
-                formData.append('image', file);
-                
-                fetch('https://imgbb.com', { method: 'POST', body: formData })
-                .then(res => res.json()).then(data => {
-                    if(data.success) {
-                        const directUrl = data.data.url;
-                        document.getElementById('uploadStatusFoto').innerHTML = `✅ Berhasil! Salin link ini: <br><b style="color:#ff7b90; word-break:break-all;">${directUrl}</b>`;
+        // FUNGSI UPLOAD FOTO MANUAL
+        function uploadFotoSekarang() {
+            const fileInput = document.getElementById('fileUploaderFoto');
+            if(fileInput.files.length === 0) { alert('Pilih file fotonya dulu dari laptop!'); return; }
+            
+            document.getElementById('uploadStatusFoto').innerText = "🔄 Sedang mengunggah foto ke internet...";
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+            
+            fetch('https://imgbb.com', { method: 'POST', body: formData })
+            .then(res => res.json()).then(data => {
+                if(data.success) {
+                    const directUrl = data.data.url;
 Gunakan kode dengan hati-hati.
+document.getElementById('uploadStatusFoto').innerHTML = ✅ Berhasil! Link otomatis disalin ke kolom input.;
 if(!document.getElementById('linkFoto1').value) document.getElementById('linkFoto1').value = directUrl;
 else document.getElementById('linkFoto2').value = directUrl;
+} else { document.getElementById('uploadStatusFoto').innerText = "❌ Gagal mengunggah foto."; }
+}).catch(() => { document.getElementById('uploadStatusFoto').innerText = "❌ Terjadi kesalahan jaringan."; });
 }
-}).catch(() => { document.getElementById('uploadStatusFoto').innerText = "❌ Gagal mengunggah."; });
-});
-document.getElementById('fileUploaderVideo').addEventListener('change', function(e) {
-const file = e.target.files[0];
-if(!file) return;
+// FUNGSI UPLOAD VIDEO MANUAL
+function uploadVideoSekarang() {
+const fileInput = document.getElementById('fileUploaderVideo');
+if(fileInput.files.length === 0) { alert('Pilih file videonya dulu dari laptop!'); return; }
 document.getElementById('uploadStatusVideo').innerText = "🔄 Sedang mengunggah video ke internet (mohon tunggu)...";
 const formData = new FormData();
-formData.append('file', file);
+formData.append('file', fileInput.files[0]);
 fetch('tmpfiles.org', { method: 'POST', body: formData })
 .then(res => res.json()).then(data => {
 if(data.data && data.data.url) {
 const directUrl = data.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
-document.getElementById('uploadStatusVideo').innerHTML = ✅ Berhasil! Salin link ini: <br><b style="color:#ff7b90; word-break:break-all;">${directUrl}</b>;
+document.getElementById('uploadStatusVideo').innerHTML = ✅ Berhasil! Link otomatis dimasukkan ke kolom video.;
 document.getElementById('linkVideo').value = directUrl;
-}
-}).catch(() => { document.getElementById('uploadStatusVideo').innerText = "❌ Gagal mengunggah video."; });
-});
+} else { document.getElementById('uploadStatusVideo').innerText = "❌ Gagal mengunggah video."; }
+}).catch(() => { document.getElementById('uploadStatusVideo').innerText = "❌ Terjadi kesalahan jaringan video."; });
 }
 function loadExistingData() {
 if(!database) return;
@@ -225,7 +226,7 @@ video: document.getElementById('linkVideo').value,
 memori: document.getElementById('teksMemori').value,
 css: document.getElementById('customCss').value,
 js: document.getElementById('customJs').value
-}).then(() => { alert('✨ Sukses! Semua data, video, dan memori disimpan online.'); })
+}).then(() => { alert('✨ Sukses! Semua data berhasil disimpan online.'); })
 .catch((error) => { alert('❌ Gagal: ' + error.message); });
 }
 function logoutAdmin() {
